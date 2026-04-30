@@ -1,0 +1,38 @@
+services:
+  # Backend Service
+  - type: web
+    name: ai-server
+    env: node
+    rootDir: ai-server
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: PORT
+        value: 5000
+      - key: MONGO_URI
+        sync: false # You will need to add your actual Mongo URI in Render Dashboard
+      - key: SECRET_KEY
+        sync: false
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: RAZORPAY_API_ID
+        sync: false
+      - key: RAZORPAY_KEY_SECRET
+        sync: false
+      - key: FRONTEND_URL
+        value: https://ai-portfolio-builder-yourname.onrender.com # Update this later
+
+  # Frontend Service
+  - type: web
+    name: ai-portfolio-builder
+    env: node
+    rootDir: ai-portfolio-builder
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    envVars:
+      - key: NEXT_PUBLIC_GOOGLE_CLIENT_ID
+        sync: false
+      - key: NEXT_PUBLIC_RAZORPAY_KEY_ID
+        sync: false
+      - key: NEXT_PUBLIC_API_URL
+        value: https://ai-server.onrender.com # This will point to your backend service
