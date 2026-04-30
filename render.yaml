@@ -1,7 +1,7 @@
 services:
   # Backend Service
   - type: web
-    name: ai-server
+    name: ai-server-digipodium
     env: node
     rootDir: ai-server
     buildCommand: npm install
@@ -9,8 +9,10 @@ services:
     envVars:
       - key: PORT
         value: 5000
+      - key: FRONTEND_URL
+        value: https://ai-portfolio-builder-digipodium.onrender.com
       - key: MONGO_URI
-        sync: false # You will need to add your actual Mongo URI in Render Dashboard
+        sync: false
       - key: SECRET_KEY
         sync: false
       - key: GEMINI_API_KEY
@@ -19,20 +21,22 @@ services:
         sync: false
       - key: RAZORPAY_KEY_SECRET
         sync: false
-      - key: FRONTEND_URL
-        value: https://ai-portfolio-builder-yourname.onrender.com # Update this later
 
-  # Frontend Service
-  - type: web
-    name: ai-portfolio-builder
-    env: node
+  # Frontend Service (Static Site)
+  - type: static
+    name: ai-portfolio-builder-digipodium
+    env: static
     rootDir: ai-portfolio-builder
     buildCommand: npm install && npm run build
-    startCommand: npm start
+    publishDir: out
     envVars:
+      - key: NEXT_PUBLIC_API_URL
+        value: https://ai-server-digipodium.onrender.com
       - key: NEXT_PUBLIC_GOOGLE_CLIENT_ID
         sync: false
       - key: NEXT_PUBLIC_RAZORPAY_KEY_ID
         sync: false
-      - key: NEXT_PUBLIC_API_URL
-        value: https://ai-server.onrender.com # This will point to your backend service
+      - key: NEXTJS_BUILD_WORKERS
+        value: 1
+      - key: NODE_OPTIONS
+        value: --max-old-space-size=450
